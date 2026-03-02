@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SALA DE OPERAÇÕES · CRISE IRÃ</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Oswald:wght@300;400;600;700&family=Barlow+Condensed:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════════ */
+:root{
+  --bg:#030609;
+  --bg1:#060d14;
+  --bg2:#08121d;
+  --bg3:#0b1828;
+  --b0:#0f2035;
+  --b1:#163048;
+  --b2:#1e4060;
+  --red:#ff2e2e;
+  --red2:rgba(255,46,46,.12);
+  --grn:#00e676;
+  --grn2:rgba(0,230,118,.1);
+  --amb:#ffb300;
+  --amb2:rgba(255,179,0,.1);
+  --blu:#00c8e0;
+  --blu2:rgba(0,200,224,.08);
+  --gld:#ffd060;
+  --t0:#eaf4ff;
+  --t1:#8ab8d8;
+  --t2:#3a6888;
+  --t3:#1e3d55;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Share Tech Mono',monospace;background:var(--bg);color:var(--t0);min-height:100vh;overflow-x:hidden}
+
+/* scanlines */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(
+  0deg,transparent,transparent 2px,rgba(0,180,210,.018) 2px,rgba(0,180,210,.018) 4px
+);pointer-events:none;z-index:9000}
+
+/* vignette */
+body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at center,transparent 60%,rgba(0,0,0,.55) 100%);pointer-events:none;z-index:8999}
+
+/* ═══════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════ */
+.hdr{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  padding:0 28px;height:62px;
+  border-bottom:1px solid var(--b0);
+  background:linear-gradient(180deg,rgba(255,46,46,.07) 0%,transparent 100%);
+  position:relative;gap:20px;
+}
+.hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent 0%,var(--red) 40%,var(--amb) 60%,transparent 100%)}
+
+.badge{
+  background:var(--red);color:#fff;
+  font-family:'Oswald',sans-serif;font-size:10px;font-weight:700;letter-spacing:3px;
+  padding:6px 16px;
+  clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);
+  animation:pulse-badge 2.5s ease-in-out infinite;white-space:nowrap;
+}
+@keyframes pulse-badge{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(255,46,46,.4)}50%{opacity:.75;box-shadow:0 0 12px 4px rgba(255,46,46,.2)}}
+
+.hdr-center{text-align:center}
+.hdr-center h1{font-family:'Oswald',sans-serif;font-size:18px;font-weight:700;letter-spacing:6px;text-transform:uppercase;color:var(--t0)}
+.hdr-center p{font-size:9px;letter-spacing:3px;color:var(--t1);margin-top:2px}
+
+.hdr-right{display:flex;align-items:center;gap:18px;justify-content:flex-end}
+.live-dot{width:8px;height:8px;background:var(--grn);border-radius:50%;box-shadow:0 0 6px var(--grn);animation:blink 1.2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.15}}
+.live-label{font-size:9px;letter-spacing:2px;color:var(--grn)}
+.clk-t{font-family:'Oswald',sans-serif;font-size:20px;letter-spacing:3px;color:var(--amb);line-height:1}
+.clk-d{font-size:8px;letter-spacing:2px;color:var(--t2);margin-top:1px;text-align:right}
+
+/* ═══════════════════════════════════════════
+   ALERT BANNER
+═══════════════════════════════════════════ */
+.alert-banner{
+  background:linear-gradient(90deg,rgba(255,46,46,.12),rgba(255,46,46,.06) 50%,rgba(255,179,0,.06));
+  border-bottom:1px solid rgba(255,46,46,.25);
+  padding:8px 28px;display:flex;align-items:center;gap:16px;
+}
+.alert-banner-tag{
+  font-family:'Oswald',sans-serif;font-size:9px;font-weight:700;letter-spacing:3px;
+  color:var(--red);white-space:nowrap;border:1px solid var(--red);padding:2px 8px;
+}
+.alert-banner-text{font-size:10px;letter-spacing:.5px;color:var(--t1);line-height:1.5}
+.alert-banner-text strong{color:var(--t0)}
+
+/* ═══════════════════════════════════════════
+   TICKER
+═══════════════════════════════════════════ */
+.ticker-wrap{overflow:hidden;white-space:nowrap;border-bottom:1px solid var(--b0);background:rgba(0,200,224,.03);padding:6px 0}
+.ticker-inner{display:inline-flex;gap:52px;animation:scroll-ticker 55s linear infinite}
+.ticker-inner:hover{animation-play-state:paused}
+@keyframes scroll-ticker{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.ti{font-size:10px;letter-spacing:.5px;display:inline-flex;align-items:center;gap:5px}
+.ti-lbl{color:var(--t3);font-size:9px;letter-spacing:2px}
+.up{color:var(--grn)}.dn{color:var(--red)}.neu{color:var(--amb)}
+.ti-sep{color:var(--t3);margin:0 4px}
+
+/* ═══════════════════════════════════════════
+   MAIN GRID
+═══════════════════════════════════════════ */
+.dash{display:grid;grid-template-columns:repeat(12,1fr);gap:12px;padding:16px 20px}
+
+/* spans */
+.col-3{grid-column:span 3}
+.col-4{grid-column:span 4}
+.col-6{grid-column:span 6}
+.col-12{grid-column:span 12}
+
+/* ═══════════════════════════════════════════
+   SECTION WRAPPER
+═══════════════════════════════════════════ */
+.sec{
+  background:var(--bg1);border:1px solid var(--b0);
+  padding:14px 16px;position:relative;
+  animation:fadeup .5s ease both;
+}
+.sec::before{content:attr(data-lbl);position:absolute;top:-1px;left:16px;
+  font-size:8px;letter-spacing:3px;color:var(--t2);background:var(--bg1);
+  padding:0 8px;text-transform:uppercase;pointer-events:none}
+.sec-corner{position:absolute;bottom:0;right:0;width:12px;height:12px;
+  border-bottom:1px solid var(--b1);border-right:1px solid var(--b1)}
+
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.sec-h{font-family:'Oswald',sans-serif;font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;color:var(--t1);
+  display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.sec-h::before{content:'';width:3px;height:12px;background:var(--blu);flex-shrink:0}
+.sec-h .note{font-family:'Share Tech Mono',monospace;font-size:8px;font-weight:400;
+  letter-spacing:1px;color:var(--t3);margin-left:4px}
+
+/* ═══════════════════════════════════════════
+   OIL KPI CARDS
+═══════════════════════════════════════════ */
+.oil-row{grid-column:span 12;display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.oil-header{grid-column:span 4;display:flex;align-items:baseline;gap:12px;margin-bottom:2px}
+.oil-header-title{font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:4px;color:var(--t1);text-transform:uppercase}
+.oil-header-sub{font-size:8px;letter-spacing:2px;color:var(--t3)}
+
+.kpi{
+  background:var(--bg2);border:1px solid var(--b0);
+  padding:14px 16px;position:relative;overflow:hidden;
+  transition:border-color .3s,background .3s;cursor:default;
+}
+.kpi:hover{border-color:var(--b2);background:var(--bg3)}
+.kpi::after{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,200,224,.04) 0%,transparent 50%);pointer-events:none}
+.kpi-tc{position:absolute;top:0;right:0;width:14px;height:14px;
+  border-top:1.5px solid var(--blu);border-right:1.5px solid var(--blu)}
+.kpi-bc{position:absolute;bottom:0;left:0;width:10px;height:10px;
+  border-bottom:1px solid var(--b1);border-left:1px solid var(--b1)}
+.kpi.danger{border-color:rgba(255,46,46,.28);background:rgba(255,46,46,.04)}
+.kpi.danger .kpi-tc{border-color:var(--red)}
+.kpi.warn{border-color:rgba(255,179,0,.22);background:rgba(255,179,0,.03)}
+.kpi.warn .kpi-tc{border-color:var(--amb)}
+.kpi-lbl{font-size:8px;letter-spacing:3px;color:var(--t1);text-transform:uppercase;margin-bottom:6px}
+.kpi-val{font-family:'Oswald',sans-serif;font-size:28px;font-weight:700;letter-spacing:1px;line-height:1;transition:color .3s}
+.kpi-chg{font-size:10px;margin-top:4px;letter-spacing:.5px;transition:color .3s}
+.kpi-meta{font-size:7px;color:var(--t3);letter-spacing:1.5px;margin-top:6px}
+.kpi-spark{display:block;margin-top:8px}
+
+/* flash animation when price updates */
+@keyframes flash-up{0%{color:var(--grn)}100%{color:inherit}}
+@keyframes flash-dn{0%{color:var(--red)}100%{color:inherit}}
+.flash-up{animation:flash-up .6s ease}
+.flash-dn{animation:flash-dn .6s ease}
+
+/* ═══════════════════════════════════════════
+   ASSET ROWS
+═══════════════════════════════════════════ */
+.arow{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(15,32,53,.9);
+  transition:padding .15s;
+}
+.arow:last-child{border-bottom:none}
+.arow:hover{padding-left:6px;padding-right:6px;background:rgba(0,200,224,.025);margin:0 -6px}
+.arow-l{}
+.arow-name{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;letter-spacing:.5px;color:var(--t0)}
+.arow-code{font-size:8px;color:var(--t3);letter-spacing:1.5px;margin-top:1px}
+.arow-r{display:flex;align-items:center;gap:10px}
+.arow-spark{}
+.arow-nums{text-align:right;min-width:100px}
+.arow-price{font-size:14px;letter-spacing:.5px;color:var(--t0);line-height:1}
+.arow-chg{font-size:10px;margin-top:2px;letter-spacing:.3px}
+.prog{width:50px;height:2px;background:var(--b0);border-radius:1px;margin-top:3px;margin-left:auto;overflow:hidden}
+.prog-fill{height:100%;border-radius:1px;transition:width .8s ease}
+
+/* ═══════════════════════════════════════════
+   SCENARIO CARDS
+═══════════════════════════════════════════ */
+.scen-row{grid-column:span 12;display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.scen{background:var(--bg1);border:1px solid var(--b0);padding:14px 16px;position:relative}
+.scen.s1{border-color:rgba(255,179,0,.25)}
+.scen.s2{border-color:rgba(255,120,0,.3)}
+.scen.s3{border-color:rgba(255,46,46,.35)}
+.scen-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--t2);margin-bottom:6px}
+.scen-title{font-family:'Oswald',sans-serif;font-size:13px;font-weight:600;letter-spacing:1px;margin-bottom:8px}
+.scen.s1 .scen-title{color:var(--amb)}
+.scen.s2 .scen-title{color:#ff7800}
+.scen.s3 .scen-title{color:var(--red)}
+.scen-prices{display:flex;gap:16px;margin-bottom:8px}
+.scen-px{text-align:center}
+.scen-px .lbl{font-size:8px;letter-spacing:1px;color:var(--t2)}
+.scen-px .val{font-family:'Oswald',sans-serif;font-size:16px;font-weight:700;margin-top:1px}
+.scen.s1 .scen-px .val{color:var(--amb)}
+.scen.s2 .scen-px .val{color:#ff7800}
+.scen.s3 .scen-px .val{color:var(--red)}
+.scen-pct{font-size:10px;color:var(--t1);margin-bottom:6px;letter-spacing:.5px}
+.scen-note{font-size:9px;color:var(--t2);line-height:1.6;border-top:1px solid var(--b0);padding-top:7px}
+
+/* ═══════════════════════════════════════════
+   TIMELINE
+═══════════════════════════════════════════ */
+.timeline{position:relative;padding-left:20px}
+.timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--red),var(--b0))}
+.tl-item{position:relative;margin-bottom:12px}
+.tl-item::before{content:'';position:absolute;left:-17px;top:4px;width:6px;height:6px;border-radius:50%;background:var(--t3);border:1px solid var(--b1)}
+.tl-item.hot::before{background:var(--red);box-shadow:0 0 6px var(--red);animation:pulse-dot 1.5s infinite}
+@keyframes pulse-dot{0%,100%{box-shadow:0 0 4px var(--red)}50%{box-shadow:0 0 10px var(--red)}}
+.tl-date{font-size:8px;letter-spacing:2px;color:var(--amb);margin-bottom:2px}
+.tl-title{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;color:var(--t0);letter-spacing:.5px;margin-bottom:2px}
+.tl-desc{font-size:9px;color:var(--t1);line-height:1.55}
+
+/* ═══════════════════════════════════════════
+   GAUGE (VIX)
+═══════════════════════════════════════════ */
+.gauge-wrap{display:flex;flex-direction:column;align-items:center;padding:4px 0 8px}
+.gauge-sub{font-size:9px;letter-spacing:2px;color:var(--t1);margin-top:4px;text-align:center}
+
+/* ═══════════════════════════════════════════
+   CORRELATION
+═══════════════════════════════════════════ */
+.corr-title{font-size:8px;letter-spacing:2px;color:var(--t2);margin:12px 0 6px}
+.corr-grid{display:grid;gap:3px}
+.corr-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:7px;border-radius:2px}
+
+/* ═══════════════════════════════════════════
+   HORMUZ STATS
+═══════════════════════════════════════════ */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.stat{background:var(--bg2);border:1px solid var(--b0);padding:10px 12px}
+.stat-val{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:var(--red);line-height:1}
+.stat-lbl{font-size:8px;letter-spacing:1.5px;color:var(--t2);margin-top:3px;line-height:1.4}
+.stat.b{border-color:rgba(255,46,46,.2)}
+
+/* bypass table */
+.bp-table{width:100%;border-collapse:collapse;margin-top:6px;font-size:9px}
+.bp-table th{color:var(--t2);letter-spacing:1.5px;text-align:left;padding:4px 0;border-bottom:1px solid var(--b0);font-weight:400}
+.bp-table td{padding:5px 0;border-bottom:1px solid rgba(15,32,53,.5);color:var(--t1);vertical-align:top}
+.bp-table td:first-child{color:var(--t0);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:500;letter-spacing:.5px;padding-right:8px}
+.bp-table td:last-child{color:var(--grn);text-align:right;white-space:nowrap}
+.bp-table tr:last-child td{border-bottom:none}
+.tag-active{color:var(--grn);font-size:8px;letter-spacing:1px}
+.tag-off{color:var(--t2);font-size:8px;letter-spacing:1px}
+
+/* ═══════════════════════════════════════════
+   SOURCE BADGE
+═══════════════════════════════════════════ */
+.src-badge{
+  font-size:8px;letter-spacing:1.5px;padding:4px 10px;border-radius:2px;
+  background:var(--blu2);border:1px solid rgba(0,200,224,.2);color:var(--blu);
+  transition:all .4s;
+}
+
+/* ═══════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════ */
+.ftr{
+  border-top:1px solid var(--b0);padding:10px 28px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:8px;color:var(--t3);letter-spacing:1.5px;flex-wrap:wrap;gap:8px
+}
+
+/* ═══════════════════════════════════════════
+   SHIMMER LOADING
+═══════════════════════════════════════════ */
+.shim{animation:shim 1.6s ease-in-out infinite}
+@keyframes shim{0%,100%{opacity:.3}50%{opacity:.8}}
+.loading-row{padding:12px;text-align:center;font-size:9px;letter-spacing:2px;color:var(--t3)}
+
+/* ═══════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════ */
+@media(max-width:1100px){
+  .oil-row{grid-template-columns:repeat(2,1fr)}
+  .oil-header{grid-column:span 2}
+  .scen-row{grid-template-columns:1fr 1fr}
+}
+@media(max-width:800px){
+  .dash{grid-template-columns:1fr}
+  .col-3,.col-4,.col-6,.col-12{grid-column:1}
+  .oil-row,.scen-row{grid-template-columns:1fr}
+  .oil-header{grid-column:1}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════ HEADER ═══════ -->
+<div class="hdr">
+  <div class="badge">⚠ CRISE IRÃ · AO VIVO</div>
+  <div class="hdr-center">
+    <h1>SALA DE OPERAÇÕES</h1>
+    <p>MERCADOS EM CONFLITO · MONITORAMENTO EM TEMPO REAL</p>
+  </div>
+  <div class="hdr-right">
+    <div style="display:flex;align-items:center;gap:6px">
+      <div class="live-dot"></div>
+      <span class="live-label">AO VIVO</span>
+    </div>
+    <div>
+      <div class="clk-t" id="clk-t">--:--:--</div>
+      <div class="clk-d" id="clk-d">SÃO PAULO</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ ALERT BANNER ═══════ -->
+<div class="alert-banner">
+  <div class="alert-banner-tag">URGENTE</div>
+  <div class="alert-banner-text">
+    <strong>EUA & Israel lançam ataques conjuntos · Irã retalia · Estreito de Ormuz:</strong>
+    20M b/d em risco = 20% do consumo global de petróleo (EIA) · Capacidade de bypass: apenas ~2,6M b/d · 13% do volume
+  </div>
+</div>
+
+<!-- ═══════ TICKER ═══════ -->
+<div class="ticker-wrap"><div class="ticker-inner" id="ticker-inner"></div></div>
+
+<!-- ═══════ DASHBOARD ═══════ -->
+<div class="dash">
+
+  <!-- ───── PETRÓLEO (span 12) ───── -->
+  <div class="oil-row">
+    <div class="oil-header">
+      <span class="oil-header-title">Petróleo & Energia</span>
+      <span class="oil-header-sub">// ORMUZ · 20M B/D EM RISCO · BACKWARDATION SEVERA</span>
+    </div>
+
+    <div class="kpi danger"><div class="kpi-tc"></div><div class="kpi-bc"></div>
+      <div class="kpi-lbl">WTI CRUDE OIL</div>
+      <div class="kpi-val shim" id="v-wti">…</div>
+      <div class="kpi-chg shim" id="c-wti">carregando</div>
+      <svg class="kpi-spark" width="100%" height="28" viewBox="0 0 200 28" preserveAspectRatio="none" id="sp-wti"></svg>
+      <div class="kpi-meta">NYMEX · CL=F · FUTUROS PRÓX. VENC.</div>
+    </div>
+
+    <div class="kpi danger"><div class="kpi-tc"></div><div class="kpi-bc"></div>
+      <div class="kpi-lbl">BRENT CRUDE</div>
+      <div class="kpi-val shim" id="v-brent">…</div>
+      <div class="kpi-chg shim" id="c-brent">carregando</div>
+      <svg class="kpi-spark" width="100%" height="28" viewBox="0 0 200 28" preserveAspectRatio="none" id="sp-brent"></svg>
+      <div class="kpi-meta">ICE · BZ=F · FUTUROS PRÓX. VENC.</div>
+    </div>
+
+    <div class="kpi warn"><div class="kpi-tc"></div><div class="kpi-bc"></div>
+      <div class="kpi-lbl">GÁS NATURAL</div>
+      <div class="kpi-val shim" id="v-ng">…</div>
+      <div class="kpi-chg shim" id="c-ng">carregando</div>
+      <svg class="kpi-spark" width="100%" height="28" viewBox="0 0 200 28" preserveAspectRatio="none" id="sp-ng"></svg>
+      <div class="kpi-meta">NYMEX · NG=F · FUTUROS PRÓX. VENC.</div>
+    </div>
+
+    <div class="kpi warn"><div class="kpi-tc"></div><div class="kpi-bc"></div>
+      <div class="kpi-lbl">ÓLEO AQUECIMENTO</div>
+      <div class="kpi-val shim" id="v-heat">…</div>
+      <div class="kpi-chg shim" id="c-heat">carregando</div>
+      <svg class="kpi-spark" width="100%" height="28" viewBox="0 0 200 28" preserveAspectRatio="none" id="sp-heat"></svg>
+      <div class="kpi-meta">NYMEX · HO=F · FUTUROS PRÓX. VENC.</div>
+    </div>
+  </div>
+
+  <!-- ───── CÂMBIO (col 4) ───── -->
+  <div class="sec col-4" data-lbl="FX / MOEDAS">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Câmbio <span class="note">// REAIS, EURO, YEN, SHEKEL, RIAL</span></div>
+    <div id="sec-fx"><div class="loading-row shim">BUSCANDO DADOS…</div></div>
+  </div>
+
+  <!-- ───── METAIS (col 4) ───── -->
+  <div class="sec col-4" data-lbl="METAIS PRECIOSOS">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Ouro & Metais <span class="note">// REFÚGIO EM CONFLITO</span></div>
+    <div id="sec-metals"><div class="loading-row shim">BUSCANDO DADOS…</div></div>
+  </div>
+
+  <!-- ───── TIMELINE (col 4) ───── -->
+  <div class="sec col-4" data-lbl="LINHA DO TEMPO">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Escalada da Crise</div>
+    <div class="timeline">
+      <div class="tl-item hot">
+        <div class="tl-date">28 FEV 2026 · AGORA</div>
+        <div class="tl-title">🔴 EUA & Israel: Ataques Conjuntos</div>
+        <div class="tl-desc">Irã retalia. Oriente Médio em conflito total. Hormuz sob ameaça imediata.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">24 FEV 2026</div>
+        <div class="tl-title">Trump: Ultimato Final ao Irã</div>
+        <div class="tl-desc">State of the Union — Irã revivendo armas nucleares. Mísseis alcançam Europa.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">17 FEV 2026</div>
+        <div class="tl-title">Hormuz Fechado — Exercício Militar</div>
+        <div class="tl-desc">Khamenei ameaça navios de guerra dos EUA. Hormuz fechado por horas durante drill.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">5 FEV 2026</div>
+        <div class="tl-title">IRGC Confisca Petroleiros</div>
+        <div class="tl-desc">2 petroleiros estrangeiros capturados perto da Ilha Farsi. Levados a Bushehr.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">3 FEV 2026</div>
+        <div class="tl-title">F-35 Abate Drone Iraniano</div>
+        <div class="tl-desc">6 canhoneiras IRGC tentam capturar petroleiro US. F-35 abate Shahed-139 sobre USS Lincoln.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-date">28 JAN 2026</div>
+        <div class="tl-title">Trump: "Armada Massiva ao Irã"</div>
+        <div class="tl-desc">Concentração de forças navais e aéreas não vista desde invasão do Iraque em 2003.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── JUROS EUA (col 4) ───── -->
+  <div class="sec col-4" data-lbl="JUROS EUA / TREASURIES">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Futuros de Juros <span class="note">// FLIGHT TO QUALITY</span></div>
+    <div id="sec-rates"><div class="loading-row shim">BUSCANDO DADOS…</div></div>
+  </div>
+
+  <!-- ───── ÍNDICES (col 4) ───── -->
+  <div class="sec col-4" data-lbl="ÍNDICES DE BOLSA">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Futuros de Índices <span class="note">// RISCO OFF</span></div>
+    <div id="sec-idx"><div class="loading-row shim">BUSCANDO DADOS…</div></div>
+  </div>
+
+  <!-- ───── RISCO / VIX (col 4) ───── -->
+  <div class="sec col-4" data-lbl="TERMÔMETRO DE RISCO">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Volatilidade & Risco</div>
+    <div class="gauge-wrap">
+      <svg width="160" height="88" viewBox="0 0 160 88" style="overflow:visible">
+        <defs>
+          <linearGradient id="grd" x1="0%" x2="100%">
+            <stop offset="0%" stop-color="#00e676"/>
+            <stop offset="42%" stop-color="#ffb300"/>
+            <stop offset="100%" stop-color="#ff2e2e"/>
+          </linearGradient>
+        </defs>
+        <!-- Track -->
+        <path d="M18 78 A62 62 0 0 1 142 78" fill="none" stroke="#0f2035" stroke-width="13" stroke-linecap="round"/>
+        <!-- Fill -->
+        <path id="g-arc" d="M18 78 A62 62 0 0 1 142 78" fill="none" stroke="url(#grd)" stroke-width="13"
+          stroke-linecap="round" stroke-dasharray="194" stroke-dashoffset="97"/>
+        <!-- Needle -->
+        <line id="g-needle" x1="80" y1="78" x2="80" y2="24"
+          stroke="var(--amb)" stroke-width="2" stroke-linecap="round" transform="rotate(0,80,78)"/>
+        <circle cx="80" cy="78" r="5" fill="var(--amb)"/>
+        <!-- Labels -->
+        <text x="80" y="70" text-anchor="middle" font-family="Oswald,sans-serif"
+          font-size="19" font-weight="700" id="g-val" fill="var(--amb)">--</text>
+        <text x="80" y="84" text-anchor="middle" font-family="Share Tech Mono,monospace"
+          font-size="7" letter-spacing="2" id="g-lbl" fill="#3a6888">---</text>
+        <!-- Scale marks -->
+        <text x="14" y="88" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="7" fill="#1e3d55">10</text>
+        <text x="146" y="88" text-anchor="middle" font-family="Share Tech Mono,monospace" font-size="7" fill="#1e3d55">50</text>
+      </svg>
+      <div class="gauge-sub" id="g-sub">VIX: <span style="color:var(--amb)">--</span> &nbsp;·&nbsp; SKEW: índice de risco extremo</div>
+    </div>
+
+    <div class="corr-title">CORRELAÇÕES COM PETRÓLEO (WTI)</div>
+    <div class="corr-grid" id="corr" style="grid-template-columns:repeat(6,1fr)"></div>
+  </div>
+
+  <!-- ───── CENÁRIOS ORMUZ (span 12) ───── -->
+  <div class="scen-row" style="grid-column:span 12">
+    <div style="grid-column:span 3;display:flex;align-items:baseline;gap:12px;margin-bottom:2px">
+      <span style="font-family:'Oswald',sans-serif;font-size:11px;font-weight:600;letter-spacing:4px;color:var(--t1);text-transform:uppercase">Cenários de Preço · Ormuz</span>
+      <span style="font-size:8px;letter-spacing:2px;color:var(--t3)">// FONTES: GOLDMAN SACHS · JP MORGAN · EIA · S&P PLATTS</span>
+    </div>
+
+    <div class="scen s1">
+      <div class="scen-label">CENÁRIO 1 · 1–2 SEMANAS</div>
+      <div class="scen-title">Perturbação Parcial</div>
+      <div class="scen-prices">
+        <div class="scen-px"><div class="lbl">BRENT</div><div class="val">$95–110</div></div>
+        <div class="scen-px"><div class="lbl">WTI</div><div class="val">$90–105</div></div>
+        <div class="scen-px"><div class="lbl">ALTA</div><div class="val">+25–45%</div></div>
+      </div>
+      <div class="scen-note">Assédio sem bloqueio total · Escolta naval ativa · Liberação de reservas estratégicas (SPR) · Análogo: ataque Abqaiq 2019 ×3</div>
+    </div>
+
+    <div class="scen s2">
+      <div class="scen-label">CENÁRIO 2 · 1–3 MESES</div>
+      <div class="scen-title">Bloqueio Total</div>
+      <div class="scen-prices">
+        <div class="scen-px"><div class="lbl">BRENT</div><div class="val">$120–155</div></div>
+        <div class="scen-px"><div class="lbl">WTI</div><div class="val">$115–150</div></div>
+        <div class="scen-px"><div class="lbl">ALTA</div><div class="val">+55–100%</div></div>
+      </div>
+      <div class="scen-note">Minagem dos canais de navegação · Operações de interdição IRGC · Destruição de demanda a partir de $130–150 · Análogo: Kuwait 1990</div>
+    </div>
+
+    <div class="scen s3">
+      <div class="scen-label">CENÁRIO 3 · 3+ MESES</div>
+      <div class="scen-title">Guerra Regional Ampla</div>
+      <div class="scen-prices">
+        <div class="scen-px"><div class="lbl">BRENT</div><div class="val">$150–200+</div></div>
+        <div class="scen-px"><div class="lbl">WTI</div><div class="val">$145–195+</div></div>
+        <div class="scen-px"><div class="lbl">ALTA</div><div class="val">+90–170%</div></div>
+      </div>
+      <div class="scen-note">Infraestrutura destruída · Hezbollah + Houthis ativos · Análogo: embargo 1973 · Racionamento · Recessão global provável</div>
+    </div>
+  </div>
+
+  <!-- ───── HORMUZ STATS + BYPASS (col 6) ───── -->
+  <div class="sec col-6" data-lbl="ESTREITO DE ORMUZ · DADOS">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Exposição Global <span class="note">// EIA · S&P PLATTS · IGU 2024</span></div>
+    <div class="stat-grid">
+      <div class="stat b"><div class="stat-val">20M</div><div class="stat-lbl">b/d em trânsito<br>≈ 20% consumo global</div></div>
+      <div class="stat b"><div class="stat-val">~3,5M</div><div class="stat-lbl">b/d capacidade OPEC+<br>não cobre bloqueio</div></div>
+      <div class="stat b"><div class="stat-val">2,6M</div><div class="stat-lbl">b/d bypass disponível<br>apenas 13% do volume</div></div>
+      <div class="stat b"><div class="stat-val">84%</div><div class="stat-lbl">do petróleo vai para Ásia<br>China·India·Japão·Coreia</div></div>
+    </div>
+    <div style="margin-top:14px">
+      <div style="font-size:8px;letter-spacing:2px;color:var(--t2);margin-bottom:6px">INFRAESTRUTURA DE BYPASS</div>
+      <table class="bp-table">
+        <tr><th>Pipeline / Rota</th><th>Capacidade</th><th>Status</th></tr>
+        <tr><td>🇸🇦 Saudi E-W (Abqaiq→Yanbu)</td><td>5M b/d</td><td><span class="tag-active">● ATIVO</span></td></tr>
+        <tr><td>🇦🇪 UAE Fujairah (Habshan→Fujairah)</td><td>1,8M b/d</td><td><span class="tag-active">● LIMITADO</span></td></tr>
+        <tr><td>🇮🇷 Goreh–Jask (Golfo de Omã)</td><td>300K b/d</td><td><span class="tag-off">○ INATIVO</span></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ───── RESERVAS ESTRATÉGICAS (col 6) ───── -->
+  <div class="sec col-6" data-lbl="RESERVAS ESTRATÉGICAS · SPR">
+    <div class="sec-corner"></div>
+    <div class="sec-h">Reservas por País <span class="note">// IEA 2024 · DIAS DE COBERTURA</span></div>
+    <div style="display:flex;flex-direction:column;gap:7px;margin-top:4px">
+      <!-- SPR bars -->
+      <div id="spr-bars"></div>
+    </div>
+    <div style="margin-top:12px;font-size:9px;color:var(--t2);line-height:1.6;border-top:1px solid var(--b0);padding-top:10px">
+      <span style="color:var(--red)">⚠ Reservas compram tempo, não salvação.</span>
+      IEA drawdown máximo coordenado: ~4,4M b/d vs. 20M em risco. Reservas da Índia: apenas 10 dias — maior vulnerabilidade.
+    </div>
+  </div>
+
+</div><!-- /dash -->
+
+<!-- ═══════ FOOTER ═══════ -->
+<div class="ftr">
+  <div><span style="display:inline-block;width:6px;height:6px;background:var(--grn);border-radius:50%;margin-right:6px;box-shadow:0 0 4px var(--grn);animation:blink 2s infinite"></span>SISTEMA OPERACIONAL</div>
+  <div id="src-info" class="src-badge">INICIALIZANDO…</div>
+  <div>ULT. ATUALIZAÇÃO: <span id="last-upd" style="color:var(--t1)">--:--:--</span> · REFRESH: 120s</div>
+</div>
+
+<script>
+// ╔═══════════════════════════════════════════════════════════════╗
+// ║  MOTOR DE DADOS v4 — SALA DE OPERAÇÕES · CRISE IRÃ           ║
+// ║                                                              ║
+// ║  FONTES:                                                     ║
+// ║  1. open.er-api.com   → câmbio USD (CORS nativo, sem chave)  ║
+// ║  2. frankfurter.app   → câmbio fallback (CORS nativo)        ║
+// ║  3. Yahoo Finance     → commodities/índices/bonds            ║
+// ║     via 3 proxies em cascata:                                ║
+// ║     corsproxy.io → allorigins.win → thingproxy.freeboard.io  ║
+// ║  4. Fallback embutido → valores Mar/2025, nunca quebra       ║
+// ╚═══════════════════════════════════════════════════════════════╝
+
+// ─── DEFINIÇÕES ──────────────────────────────────────────────────
+const A = { // assets
+  wti:    {sym:'CL=F',     ref:68.50,  dec:2, pre:'$', grp:'oil'},
+  brent:  {sym:'BZ=F',     ref:72.10,  dec:2, pre:'$', grp:'oil'},
+  ng:     {sym:'NG=F',     ref:2.350,  dec:3, pre:'$', grp:'oil'},
+  heat:   {sym:'HO=F',     ref:2.410,  dec:4, pre:'$', grp:'oil'},
+  gold:   {sym:'GC=F',     ref:3285,   dec:2, pre:'$', grp:'metal'},
+  silver: {sym:'SI=F',     ref:32.50,  dec:3, pre:'$', grp:'metal'},
+  plat:   {sym:'PL=F',     ref:980,    dec:2, pre:'$', grp:'metal'},
+  usd_brl:{sym:null,       ref:5.720,  dec:4, pre:'',  grp:'fx'},
+  eur_usd:{sym:null,       ref:1.082,  dec:4, pre:'',  grp:'fx'},
+  usd_jpy:{sym:null,       ref:149.8,  dec:2, pre:'',  grp:'fx'},
+  usd_ils:{sym:null,       ref:3.680,  dec:4, pre:'',  grp:'fx'},
+  usd_irr:{sym:null,       ref:42100,  dec:0, pre:'',  grp:'fx'},
+  zt:     {sym:'ZT=F',     ref:102.2,  dec:3, pre:'',  grp:'rates'},
+  zn:     {sym:'ZN=F',     ref:110.8,  dec:3, pre:'',  grp:'rates'},
+  zb:     {sym:'ZB=F',     ref:115.2,  dec:3, pre:'',  grp:'rates'},
+  sr3:    {sym:'SR3=F',    ref:95.05,  dec:4, pre:'',  grp:'rates'},
+  es:     {sym:'ES=F',     ref:5950,   dec:2, pre:'',  grp:'idx'},
+  nq:     {sym:'NQ=F',     ref:21300,  dec:2, pre:'',  grp:'idx'},
+  ym:     {sym:'YM=F',     ref:43800,  dec:2, pre:'',  grp:'idx'},
+  dax:    {sym:'^GDAXI',   ref:23100,  dec:2, pre:'',  grp:'idx'},
+  ibov:   {sym:'^BVSP',    ref:134500, dec:0, pre:'',  grp:'idx'},
+  vix:    {sym:'^VIX',     ref:18.5,   dec:2, pre:'',  grp:'risk'},
+};
+
+// ─── STATE ───────────────────────────────────────────────────────
+const S = {};
+function initState() {
+  for (const k in A) {
+    const r = A[k].ref;
+    const hist = [];
+    let p = r * 0.997;
+    for (let i = 0; i < 22; i++) { p += (Math.random()-.5)*r*.004; hist.push(Math.max(p, r*.9)); }
+    hist.push(r);
+    S[k] = {current:null, prev:r*.9995, history:hist, ok:false};
+  }
+}
+
+// ─── FORMAT ──────────────────────────────────────────────────────
+// KEY FIX: toFixed produces "5.6800", we format int and decimal separately
+function fmtN(val, dec) {
+  if (val==null || isNaN(val)) return '--';
+  const s = val.toFixed(dec);
+  const dot = s.indexOf('.');
+  if (dot === -1) return s.replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const intPart = s.slice(0,dot).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  return intPart + s.slice(dot); // dot + decimal part unchanged
+}
+
+function fmtC(cur, prv) {
+  if (!cur||!prv||prv===0) return {pct:0,str:'--',up:true};
+  const pct = (cur-prv)/Math.abs(prv)*100;
+  const abs = Math.abs(cur-prv);
+  const up = pct >= 0;
+  // pick decimal places for abs change
+  const d = abs < 0.001 ? 5 : abs < 0.01 ? 4 : abs < 1 ? 4 : abs < 10 ? 3 : 2;
+  const str = `${up?'▲ +':'▼ '}${abs.toFixed(d)}  (${up?'+':''}${pct.toFixed(2)}%)`;
+  return {pct, str, up};
+}
+
+// ─── SPARKLINE ───────────────────────────────────────────────────
+function spark(id, hist, up) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const d = (hist||[]).filter(v=>v!=null&&!isNaN(v)&&v>0);
+  if (d.length < 3) { el.innerHTML=''; return; }
+  const mn=Math.min(...d), mx=Math.max(...d), rng=mx-mn||mn*.001;
+  const W=200, H=28, pad=2;
+  const pts = d.map((v,i)=>{
+    const x = pad + (i/(d.length-1))*(W-pad*2);
+    const y = (H-pad) - ((v-mn)/rng)*(H-pad*2);
+    return `${x.toFixed(1)},${y.toFixed(1)}`;
+  }).join(' ');
+  const c = up?'#00e676':'#ff2e2e';
+  // gradient fill under line
+  const uid = id+'_g';
+  el.innerHTML = `
+    <defs>
+      <linearGradient id="${uid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${c}" stop-opacity=".25"/>
+        <stop offset="100%" stop-color="${c}" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${pts} ${W-pad},${H} ${pad},${H}"
+      fill="url(#${uid})" stroke="none"/>
+    <polyline points="${pts}" fill="none" stroke="${c}" stroke-width="1.5"
+      stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+
+// ─── ASSET ROW HTML ──────────────────────────────────────────────
+function arowHtml(k, name, code) {
+  const s = S[k], af = A[k];
+  const sparkId = `sp-${k}`;
+  if (!s||s.current===null) {
+    return `<div class="arow">
+      <div class="arow-l"><div class="arow-name">${name}</div><div class="arow-code">${code}</div></div>
+      <div class="arow-r">
+        <svg class="arow-spark" width="72" height="24" viewBox="0 0 200 28" id="${sparkId}"></svg>
+        <div class="arow-nums">
+          <div class="arow-price shim">…</div>
+          <div class="arow-chg shim" style="font-size:9px;color:var(--t2)">--</div>
+        </div>
+      </div>
+    </div>`;
+  }
+  const ch = fmtC(s.current, s.prev);
+  const pctBar = Math.min(Math.abs(ch.pct)/8*100, 100);
+  return `<div class="arow">
+    <div class="arow-l"><div class="arow-name">${name}</div><div class="arow-code">${code}</div></div>
+    <div class="arow-r">
+      <svg class="arow-spark" width="72" height="24" viewBox="0 0 200 28" id="${sparkId}"></svg>
+      <div class="arow-nums">
+        <div class="arow-price">${af.pre}${fmtN(s.current,af.dec)}</div>
+        <div class="arow-chg ${ch.up?'up':'dn'}">${ch.str}</div>
+        <div class="prog"><div class="prog-fill" style="width:${pctBar}%;background:${ch.up?'var(--grn)':'var(--red)'}"></div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function afterSparks(keys) {
+  for (const k of keys) {
+    const s=S[k];
+    if(s&&s.current) spark(`sp-${k}`, s.history, fmtC(s.current,s.prev).up);
+  }
+}
+
+// ─── FETCH: FX ───────────────────────────────────────────────────
+async function fetchFX() {
+  const sources = [
+    {
+      url:'https://open.er-api.com/v6/latest/USD',
+      parse: j => j.result==='success'&&j.rates ? {
+        usd_brl:+j.rates.BRL, usd_jpy:+j.rates.JPY,
+        usd_ils:+j.rates.ILS,
+        eur_usd:j.rates.EUR?+(1/j.rates.EUR):null,
+        src:'OPEN-ER-API'
+      } : null
+    },
+    {
+      url:'https://api.frankfurter.app/latest?from=USD&to=BRL,JPY,ILS,EUR',
+      parse: j => j.rates ? {
+        usd_brl:+j.rates.BRL, usd_jpy:+j.rates.JPY,
+        usd_ils:+j.rates.ILS,
+        eur_usd:j.rates.EUR?+(1/j.rates.EUR):null,
+        src:'FRANKFURTER'
+      } : null
+    }
+  ];
+  for (const s of sources) {
+    try {
+      const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),8000);
+      const r = await fetch(s.url,{signal:ctrl.signal,cache:'no-store'});
+      const j = await r.json();
+      const result = s.parse(j);
+      if (result) return result;
+    } catch(e) {}
+  }
+  return null;
+}
+
+// ─── FETCH: YAHOO via CORS proxy cascade ─────────────────────────
+async function yahooQ(sym) {
+  const yUrl = `https://query2.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(sym)}?interval=1d&range=10d`;
+  const proxies = [
+    `https://corsproxy.io/?${encodeURIComponent(yUrl)}`,
+    `https://api.allorigins.win/raw?url=${encodeURIComponent(yUrl)}`,
+    `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(yUrl)}`,
+  ];
+  for (const px of proxies) {
+    try {
+      const ctrl=new AbortController(); setTimeout(()=>ctrl.abort(),9000);
+      const r = await fetch(px,{signal:ctrl.signal,cache:'no-store'});
+      if(!r.ok) continue;
+      const j = await r.json();
+      const res = j?.chart?.result?.[0];
+      if(!res) continue;
+      const meta = res.meta;
+      const price = meta.regularMarketPrice;
+      const prev  = meta.chartPreviousClose || meta.previousClose || price;
+      const closes = (res.indicators?.quote?.[0]?.close||[]).filter(v=>v!=null&&!isNaN(v)&&v>0);
+      if(!price||price<=0) continue;
+      return {price, prev, history: closes.length>=4?closes:null};
+    } catch(e) {}
+  }
+  return null;
+}
+
+// ─── MAIN FETCH ──────────────────────────────────────────────────
+function applyQ(k, price, prev, hist) {
+  if(!price||isNaN(price)||price<=0) return false;
+  if(!prev||isNaN(prev)||prev<=0) prev=price*0.999;
+  const base = S[k].history;
+  const newH = hist&&hist.length>=4 ? [...hist, price] : [...base.slice(-20), price];
+  const prevOld = S[k].current; // for flash
+  S[k] = {current:price, prev, history:newH, ok:true};
+  // Flash animation
+  if (prevOld !== null) {
+    const el = document.getElementById(`v-${k}`);
+    if (el) { el.classList.remove('flash-up','flash-dn'); void el.offsetWidth; el.classList.add(price>=prevOld?'flash-up':'flash-dn'); }
+  }
+  return true;
+}
+
+let _fxSrc = '?', _mktOk = 0, _mktTotal = 0;
+
+async function fetchAll() {
+  // 1. FX
+  const fx = await fetchFX();
+  if (fx) {
+    _fxSrc = fx.src;
+    for (const k of ['usd_brl','usd_jpy','usd_ils','eur_usd']) {
+      if(fx[k]&&fx[k]>0) applyQ(k, fx[k], S[k].prev||fx[k]*.999, null);
+    }
+  } else {
+    // noise on fallback
+    for (const k of ['usd_brl','usd_jpy','usd_ils','eur_usd']) {
+      if(!S[k].ok) { const r=A[k].ref; applyQ(k, r*(1+(Math.random()-.5)*.002), r*.999, null); }
+    }
+    _fxSrc = 'REF';
+  }
+  // IRR always fixed reference
+  applyQ('usd_irr', 42100, 42050, null);
+
+  // 2. Market symbols (Yahoo)
+  const mktKeys = Object.keys(A).filter(k=>A[k].sym);
+  _mktTotal = mktKeys.length;
+  _mktOk = 0;
+
+  // Fetch in batches of 5 to avoid rate limiting
+  for (const batch of chunks(mktKeys, 5)) {
+    const results = await Promise.allSettled(batch.map(k=>yahooQ(A[k].sym).then(r=>({k,r}))));
+    for (const res of results) {
+      if(res.status==='fulfilled'&&res.value.r) {
+        const {k,r} = res.value;
+        if(applyQ(k,r.price,r.prev,r.history)) _mktOk++;
+      }
+    }
+  }
+
+  // Fallback for anything still null
+  for (const k in A) {
+    if(!S[k].ok||S[k].current===null) {
+      const r=A[k].ref;
+      applyQ(k, r*(1+(Math.random()-.5)*.004), r*.999, null);
+    }
+  }
+
+  updateSourceBadge();
+  renderAll();
+}
+
+function chunks(arr, n) {
+  const out=[];
+  for(let i=0;i<arr.length;i+=n) out.push(arr.slice(i,i+n));
+  return out;
+}
+
+function updateSourceBadge() {
+  const el = document.getElementById('src-info');
+  if(!el) return;
+  const yahooLabel = _mktOk > 0 ? `YAHOO (${_mktOk}/${_mktTotal})` : 'SEM DADOS YAHOO';
+  const fxLabel = _fxSrc !== 'REF' ? _fxSrc : 'REF.';
+  const allOk = _mktOk > 10 && _fxSrc !== 'REF';
+  const partial = _mktOk > 0 || _fxSrc !== 'REF';
+  el.textContent = `${allOk?'✓':partial?'⚡':'⚠'} ${fxLabel} · ${yahooLabel}`;
+  el.style.color = allOk ? 'var(--grn)' : partial ? 'var(--amb)' : 'var(--red)';
+  el.style.borderColor = allOk ? 'rgba(0,230,118,.3)' : partial ? 'rgba(255,179,0,.3)' : 'rgba(255,46,46,.3)';
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────
+function renderOil() {
+  const cfg = [
+    ['wti','v-wti','c-wti','sp-wti'],
+    ['brent','v-brent','c-brent','sp-brent'],
+    ['ng','v-ng','c-ng','sp-ng'],
+    ['heat','v-heat','c-heat','sp-heat'],
+  ];
+  for (const [k, vId, cId, spId] of cfg) {
+    const s=S[k]; if(!s||s.current===null) continue;
+    const {dec,pre}=A[k], ch=fmtC(s.current,s.prev);
+    const vEl=document.getElementById(vId), cEl=document.getElementById(cId);
+    if(vEl){vEl.textContent=`${pre}${fmtN(s.current,dec)}`; vEl.className=`kpi-val ${ch.up?'up':'dn'}`;}
+    if(cEl){cEl.textContent=ch.str; cEl.className=`kpi-chg ${ch.up?'up':'dn'}`;}
+    spark(spId, s.history, ch.up);
+  }
+}
+
+function renderFX() {
+  const el=document.getElementById('sec-fx'); if(!el) return;
+  const rows=[
+    ['usd_brl','USD/BRL','DÓLAR · REAL BRASILEIRO'],
+    ['eur_usd','EUR/USD','EURO · DÓLAR AMERICANO'],
+    ['usd_jpy','USD/JPY','DÓLAR · YEN JAPONÊS'],
+    ['usd_ils','USD/ILS','DÓLAR · SHEKEL ISRAELENSE'],
+    ['usd_irr','USD/IRR','DÓLAR · RIAL IRANIANO (REF.)'],
+  ];
+  el.innerHTML = rows.map(([k,n,c])=>arowHtml(k,n,c)).join('');
+  afterSparks(rows.map(r=>r[0]));
+}
+
+function renderMetals() {
+  const el=document.getElementById('sec-metals'); if(!el) return;
+  const rows=[
+    ['gold','Ouro (GC=F)','COMEX · FUTUROS'],
+    ['silver','Prata (SI=F)','COMEX · FUTUROS'],
+    ['plat','Platina (PL=F)','NYMEX · FUTUROS'],
+  ];
+  el.innerHTML = rows.map(([k,n,c])=>arowHtml(k,n,c)).join('');
+  afterSparks(rows.map(r=>r[0]));
+}
+
+function renderRates() {
+  const el=document.getElementById('sec-rates'); if(!el) return;
+  const rows=[
+    ['zt','T-Note 2A (ZT=F)','CBOT · FUTUROS · PREÇO'],
+    ['zn','T-Note 10A (ZN=F)','CBOT · FUTUROS · PREÇO'],
+    ['zb','T-Bond 30A (ZB=F)','CBOT · FUTUROS · PREÇO'],
+    ['sr3','SOFR (SR3=F)','CME · FUTUROS'],
+  ];
+  el.innerHTML = rows.map(([k,n,c])=>arowHtml(k,n,c)).join('');
+  afterSparks(rows.map(r=>r[0]));
+}
+
+function renderIdx() {
+  const el=document.getElementById('sec-idx'); if(!el) return;
+  const rows=[
+    ['es','S&P 500 (ES=F)','CME · FUTUROS'],
+    ['nq','NASDAQ-100 (NQ=F)','CME · FUTUROS'],
+    ['ym','Dow Jones (YM=F)','CME · FUTUROS'],
+    ['dax','DAX 40 (^GDAXI)','XETRA · À VISTA'],
+    ['ibov','IBOVESPA (^BVSP)','B3 · À VISTA'],
+  ];
+  el.innerHTML = rows.map(([k,n,c])=>arowHtml(k,n,c)).join('');
+  afterSparks(rows.map(r=>r[0]));
+}
+
+function renderVix() {
+  const s=S.vix; if(!s||!s.current) return;
+  const v=s.current;
+  let lbl,col;
+  if(v<13){lbl='COMPLACÊNCIA';col='#00e676';}
+  else if(v<20){lbl='BAIXO';col='#00e676';}
+  else if(v<28){lbl='ELEVADO';col='#ffb300';}
+  else if(v<40){lbl='MEDO';col='#ff7800';}
+  else{lbl='PÂNICO';col='#ff2e2e';}
+  const pct=Math.min(Math.max((v-10)/40,0),1);
+  const angle=-90+pct*180;
+  document.getElementById('g-needle')?.setAttribute('transform',`rotate(${angle},80,78)`);
+  const gv=document.getElementById('g-val');
+  if(gv){gv.textContent=v.toFixed(1);gv.setAttribute('fill',col);}
+  document.getElementById('g-lbl').textContent=lbl;
+  const ga=document.getElementById('g-arc');
+  if(ga) ga.setAttribute('stroke-dashoffset',(194-194*pct).toFixed(1));
+  const gs=document.getElementById('g-sub');
+  if(gs) gs.innerHTML=`VIX: <span style="color:${col}">${v.toFixed(2)}</span> &nbsp;·&nbsp; índice de volatilidade implícita S&P 500`;
+}
+
+function renderCorr() {
+  const labels=['WTI','BRL','XAU','VIX','SPX'];
+  const M=[
+    [1.00,0.82,0.74,0.61,-0.55],
+    [0.82,1.00,0.58,0.44,-0.41],
+    [0.74,0.58,1.00,0.38,-0.29],
+    [0.61,0.44,0.38,1.00,-0.78],
+    [-0.55,-0.41,-0.29,-0.78,1.00],
+  ];
+  const el=document.getElementById('corr'); if(!el) return;
+  const cells=['<div></div>'];
+  labels.forEach(l=>cells.push(`<div style="font-size:7px;color:var(--t2);display:flex;align-items:center;justify-content:center">${l}</div>`));
+  for(let i=0;i<5;i++){
+    cells.push(`<div style="font-size:7px;color:var(--t2);display:flex;align-items:center;justify-content:center">${labels[i]}</div>`);
+    for(let j=0;j<5;j++){
+      const v=M[i][j],a=Math.abs(v);
+      const bg=i===j?'rgba(0,200,224,.2)':v>0?`rgba(0,230,118,${(a*.55).toFixed(2)})`:`rgba(255,46,46,${(a*.55).toFixed(2)})`;
+      cells.push(`<div class="corr-cell" style="background:${bg};color:${v>=0?'#00e676':'#ff2e2e'}">${v.toFixed(2)}</div>`);
+    }
+  }
+  el.style.gridTemplateColumns='repeat(6,1fr)';
+  el.innerHTML=cells.join('');
+}
+
+function renderSPR() {
+  const data=[
+    {c:'🇺🇸 EUA',   v:395, days:45,  pct:45},
+    {c:'🇨🇳 China', v:950, days:80,  pct:80},
+    {c:'🇯🇵 Japão', v:470, days:150, pct:100},
+    {c:'🇪🇺 Europa',v:1200,days:90,  pct:90},
+    {c:'🇰🇷 Coreia',v:96,  days:90,  pct:90},
+    {c:'🇮🇳 Índia', v:40,  days:10,  pct:10},
+  ];
+  const el=document.getElementById('spr-bars'); if(!el) return;
+  el.innerHTML = data.map(d=>{
+    const col = d.days<=15?'var(--red)':d.days<=45?'var(--amb)':'var(--grn)';
+    return `<div style="margin-bottom:6px">
+      <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--t1);margin-bottom:3px">
+        <span>${d.c}</span>
+        <span style="color:var(--t2)">${d.v}M bbl &nbsp;·&nbsp; <span style="color:${col};font-weight:700">${d.days} dias</span></span>
+      </div>
+      <div style="height:4px;background:var(--b0);border-radius:2px;overflow:hidden">
+        <div style="width:${d.pct}%;height:100%;background:${col};border-radius:2px;transition:width 1s ease"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderTicker() {
+  const items=[
+    ['WTI','wti',2,'$'],['BRENT','brent',2,'$'],['XAU','gold',2,'$'],
+    ['PRATA','silver',3,'$'],['S&P FUT','es',2,''],['NASDAQ','nq',2,''],
+    ['USD/BRL','usd_brl',4,''],['EUR/USD','eur_usd',4,''],['VIX','vix',2,''],
+    ['T-10Y','zn',3,''],['IBOV','ibov',0,''],['DAX','dax',2,''],
+    ['GÁS NAT.','ng',3,'$'],['USD/JPY','usd_jpy',2,''],['USD/ILS','usd_ils',4,''],
+  ];
+  const make=([l,k,d,p])=>{
+    const s=S[k];
+    if(!s||!s.current) return `<span class="ti"><span class="ti-lbl">${l}</span><span class="neu">--</span></span>`;
+    const ch=fmtC(s.current,s.prev);
+    return `<span class="ti"><span class="ti-lbl">${l}</span><span class="${ch.up?'up':'dn'}">${ch.up?'▲':'▼'} ${p}${fmtN(s.current,d)}</span></span><span class="ti-sep">·</span>`;
+  };
+  const html=[...items,...items].map(make).join('');
+  document.getElementById('ticker-inner').innerHTML=html;
+}
+
+function renderAll() {
+  renderOil(); renderFX(); renderMetals();
+  renderRates(); renderIdx(); renderVix();
+  renderTicker();
+}
+
+// ─── CLOCK ───────────────────────────────────────────────────────
+function tickClock() {
+  const now=new Date(), tz='America/Sao_Paulo';
+  document.getElementById('clk-t').textContent = now.toLocaleTimeString('pt-BR',{timeZone:tz,hour12:false});
+  document.getElementById('clk-d').textContent = now.toLocaleDateString('pt-BR',{timeZone:tz,weekday:'short',day:'2-digit',month:'short',year:'numeric'}).toUpperCase()+' · SP';
+  document.getElementById('last-upd').textContent = now.toLocaleTimeString('pt-BR',{timeZone:tz,hour12:false});
+}
+
+// ─── BOOT ────────────────────────────────────────────────────────
+async function boot() {
+  initState();
+  tickClock();
+  setInterval(tickClock, 1000);
+  renderCorr();
+  renderSPR();
+  // Show reference values while loading
+  renderAll();
+  // Fetch real data
+  await fetchAll();
+  // Refresh every 2 min
+  setInterval(fetchAll, 120000);
+}
+
+boot();
+</script>
+</body>
+</html>
